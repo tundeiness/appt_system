@@ -66,3 +66,9 @@ end
 gem "devise", "~> 4.9"
 
 gem "rspec-rails", "~> 6.1"
+
+gem "cancancan", "~> 3.6"
+
+gem "factory_bot_rails", "~> 6.4"
+
+gem "faker", "~> 3.4"

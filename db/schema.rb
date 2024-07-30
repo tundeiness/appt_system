@@ -10,9 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_26_014144) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_30_223421) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "admins", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_admins_on_user_id"
+  end
+
+  create_table "clients", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_clients_on_user_id"
+  end
+
+  create_table "therapists", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "specialization"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_therapists_on_user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -26,4 +48,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_26_014144) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "admins", "users"
+  add_foreign_key "clients", "users"
+  add_foreign_key "therapists", "users"
 end

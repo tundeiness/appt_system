@@ -10,5 +10,5 @@ class User < ApplicationRecord
   has_one :therapist
   has_one :admin
 
-  enum role: { client: 0, therapist: 1, admin: 2 }
+  # enum role: { client: 0, therapist: 1, admin: 2 }
 end

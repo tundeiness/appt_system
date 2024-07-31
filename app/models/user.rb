@@ -4,11 +4,12 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  validates :role, presence: true
+  enum role: %i[client therapist admin]
+  after_initialize :set_default_role, if: :new_record?
 
-  has_one :client
-  has_one :therapist
-  has_one :admin
+  private
 
-  # enum role: { client: 0, therapist: 1, admin: 2 }
+  def set_default_role
+    self.role ||= :client
+  end
 end

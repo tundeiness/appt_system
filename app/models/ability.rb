@@ -28,26 +28,16 @@ class Ability
     #
     # See the wiki for details:
     # https://github.com/CanCanCommunity/cancancan/blob/develop/docs/define_check_abilities.md
+    user ||= User.new # guest user (not logged in)
 
-    include CanCan::Ability
-
-    def initialize(user)
-      user ||= User.new # guest user (not logged in)
-
-      if user.admin?
-        can :manage, :all
-      elsif user.therapist?
-        can :read, Client
-        can :manage, Appointment, therapist_id: user.therapist.id
-        # can :read, Therapist
-        # can :update, Therapist, id: user.therapist.id
-      elsif user.client?
-        can :create, Appointment
-        can :read, Appointment, client_id: user.client.id
-        can :update, Appointment, client_id: user.client.id
-        # can :read, Therapist
-        # can :read, Client, id: user.client.id
-      end
+    if user.admin?
+      can :manage, :all
+    elsif user.therapist?
+      can :read, User, role: 'client'
+      can :update, User, id: user.id
+    elsif user.client?
+      can :read, User, role: 'therapist'
+      # can :update, User, id: user.id
     end
   end
 end

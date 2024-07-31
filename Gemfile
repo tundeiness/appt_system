@@ -65,8 +65,12 @@ group :development do
   gem 'error_highlight', '>= 0.4.0', platforms: [:ruby]
 end
 
+group :test do
+  gem 'shoulda-matchers'
+end
+
 gem 'devise', '~> 4.9'
 
 gem 'cancancan', '~> 3.6'
 
-gem "tailwindcss-rails", "~> 2.6"
+gem 'tailwindcss-rails', '~> 2.6'

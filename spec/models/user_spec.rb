@@ -21,4 +21,14 @@ RSpec.describe User, type: :model do
     user = User.new
     expect(user.role).to eq('client')
   end
+
+  it 'can be assigned a therapist role' do
+    user = User.new(email: 'therapist@example.com', password: 'password', role: :therapist)
+    expect(user.role).to eq('therapist')
+  end
+
+  it "can be assigned an admin role" do
+    user = User.new(email: "admin@example.com", password: "password", role: :admin)
+    expect(user.role).to eq("admin")
+  end
 end

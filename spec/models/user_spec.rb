@@ -31,4 +31,14 @@ RSpec.describe User, type: :model do
     user = User.new(email: 'admin@example.com', password: 'password', role: :admin)
     expect(user.role).to eq('admin')
   end
+
+  describe 'associations' do
+    # it { should have_many(:appointments) }
+    # it { should have_many(:therapist_specializations).with_foreign_key('therapist_id') }
+    # it { should have_many(:specializations).through(:therapist_specializations) }
+  end
+
+  describe 'roles' do
+    # it { should define_enum_for(:role).with_values(%i[client therapist admin]) }
+  end
 end

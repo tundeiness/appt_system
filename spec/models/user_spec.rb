@@ -1,65 +1,89 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  it 'is valid with valid attributes' do
-    user = User.new(email: 'test@example.com', password: 'password', role: :client)
-    expect(user).to be_valid
-  end
+  # it 'is valid with valid attributes' do
+  #   user = User.new(email: 'test@example.com', password: 'password', role: :client)
+  #   expect(user).to be_valid
+  # end
 
-  it 'is not valid without an email' do
-    user = User.new(password: 'password', role: :client)
-    expect(user).to_not be_valid
-  end
+  describe 'validations' do
+    it 'is valid with with valid attributes' do
+      user = FactoryBot.build(:user)
+      expect(user).to be_valid
+    end
 
-  it 'is not valid without a password' do
-    user = User.new(email: 'test@example.com', role: :client)
-    expect(user).to_not be_valid
-  end
+    it 'is not valid without a first_name' do
+      user = FactoryBot.build(:user, first_name: nil)
+      user.valid?
+      expect(user.errors[:first_name]).to include("can't be blank")
+    end
 
-  it 'has a default role of client' do
-    user = User.new
-    expect(user.role).to eq('client')
-  end
+    it 'is not valid without a last_name' do
+      user = FactoryBot.build(:user, last_name: nil)
+      user.valid?
+      expect(user.errors[:last_name]).to include("can't be blank")
+    end
 
-  it 'can be assigned a therapist role' do
-    user = User.new(email: 'therapist@example.com', password: 'password', role: :therapist)
-    expect(user.role).to eq('therapist')
-  end
+    it 'is invalid without a phone_number' do
+      user = FactoryBot.build(:user, phone_number: nil)
+      user.valid?
+      expect(user.errors[:phone_number]).to include("can't be blank")
+    end
 
-  it 'can be assigned an admin role' do
-    user = User.new(email: 'admin@example.com', password: 'password', role: :admin)
-    expect(user.role).to eq('admin')
-  end
+    it 'is invalid without an email' do
+      user = FactoryBot.build(:user, email: nil)
+      user.valid?
+      expect(user.errors[:email]).to include("can't be blank")
+    end
 
-  it 'is not valid without a role' do
-    user = User.new(email: 'test@example.com', password: 'password')
-    user.role = nil
-    expect(user).to_not be_valid
-  end
+    it 'is not valid without a password' do
+      user = FactoryBot.build(:user, password: nil)
+      user.valid?
+      expect(user.errors[:password]).to include("can't be blank")
+    end
 
-  it 'has a default role of client' do
-    user = User.new(email: 'test@example.com', password: 'password')
-    expect(user.role).to eq('client')
-  end
+    it 'has a default role of client' do
+      user = FactoryBot.create(:user)
+      expect(user.role).to eq('client')
+    end
 
-  it 'has the correct available roles' do
-    expect(User.roles.keys).to match_array(%w[client therapist admin])
-  end
+    it 'can be assigned a therapist role' do
+      user = FactoryBot.create(:user, role: :therapist)
+      expect(user.role).to eq('therapist')
+    end
 
-  it 'is not valid with a duplicate email' do
-    User.create(email: 'test@example.com', password: 'password', role: :client)
-    user = User.new(email: 'test@example.com', password: 'password', role: :client)
-    expect(user).to_not be_valid
-  end
+    it 'is not valid without a role' do
+      user = FactoryBot.build(:user, role: nil)
+      user.valid?
+      expect(user.errors[:role]).to include("can't be blank")
+    end
 
-  it 'is not valid with an invalid email format' do
-    user = User.new(email: 'invalid_email', password: 'password', role: :client)
-    expect(user).to_not be_valid
-  end
+    it 'has the correct available roles' do
+      expect(User.roles.keys).to contain_exactly('client', 'therapist', 'admin')
+    end
 
-  it 'is not valid with a password shorter than 6 characters' do
-    user = User.new(email: 'test@example.com', password: 'short', role: :client)
-    expect(user).to_not be_valid
+    it 'matches array of roles ' do
+      expect(User.roles.keys).to match_array(%w[client therapist admin])
+    end
+
+    it 'is not valid with a duplicate email' do
+      FactoryBot.create(:user, email: 'test@example.com')
+      user = FactoryBot.build(:user, email: 'test@example.com')
+      user.valid?
+      expect(user.errors[:email]).to include('has already been taken')
+    end
+
+    it 'is not valid with an invalid email format' do
+      user = FactoryBot.build(:user, email: 'invalidemail')
+      user.valid?
+      expect(user.errors[:email]).to include('is invalid')
+    end
+
+    it 'is not valid with a password shorter than 6 characters' do
+      user = FactoryBot.build(:user, password: 'short', password_confirmation: 'short')
+      user.valid?
+      expect(user.errors[:password]).to include('is too short (minimum is 6 characters)')
+    end
   end
 
   describe 'associations' do

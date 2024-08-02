@@ -20,7 +20,7 @@ FactoryBot.define do
     end
 
     # factory :client, traits: [:client]
-    # factory :therapist, traits: [:therapist]
-    # factory :admin, traits: [:admin]
+    factory :therapist_user, traits: [:therapist]
+    factory :admin, traits: [:admin]
   end
 end

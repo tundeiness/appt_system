@@ -10,6 +10,8 @@ class User < ApplicationRecord
   scope :clients, -> { where(role: :client) }
 
   validates :role, presence: true
+  validates :email, presence: true, uniqueness: true
+
   after_initialize :set_default_role, if: :new_record?
 
   private

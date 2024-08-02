@@ -11,6 +11,9 @@ class User < ApplicationRecord
 
   validates :role, presence: true
   validates :email, presence: true, uniqueness: true
+  validates :phone_number, presence: true
+  validates :first_name, presence: true
+  validates :last_name, presence: true
 
   after_initialize :set_default_role, if: :new_record?
 

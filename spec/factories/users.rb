@@ -16,8 +16,8 @@ FactoryBot.define do
       role { :admin }
     end
 
-    factory :client, traits: [:client]
-    factory :therapist, traits: [:therapist]
-    factory :admin, traits: [:admin]
+    # factory :client, traits: [:client]
+    # factory :therapist, traits: [:therapist]
+    # factory :admin, traits: [:admin]
   end
 end

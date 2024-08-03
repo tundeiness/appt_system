@@ -6,6 +6,8 @@ FactoryBot.define do
     email { Faker::Internet.email }
     password { 'password123' }
     password_confirmation { 'password123' }
+    role { :client }
+    specialization { nil }
 
     trait :client do
       role { :client }
@@ -13,13 +15,14 @@ FactoryBot.define do
 
     trait :therapist do
       role { :therapist }
+      specialization { 'Psychiatry' }
     end
 
     trait :admin do
       role { :admin }
+      specialization { 'Cognitive Behavioral Therapy' }
     end
 
-    # factory :client, traits: [:client]
     factory :therapist_user, traits: [:therapist]
     factory :admin, traits: [:admin]
   end

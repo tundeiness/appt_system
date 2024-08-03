@@ -10,6 +10,13 @@ RSpec.describe User, type: :model do
       expect(user).to be_valid
     end
 
+    it 'is valid with a first_name, first_name, email, password, phone_number, address, role, and specialization for admin and therapist' do
+      user = FactoryBot.build(:user, :admin)
+      expect(user).to be_valid
+      user = FactoryBot.build(:user, :therapist)
+      expect(user).to be_valid
+    end
+
     it 'is not valid without a first_name' do
       user = FactoryBot.build(:user, first_name: nil)
       user.valid?
@@ -46,7 +53,7 @@ RSpec.describe User, type: :model do
     end
 
     it 'can be assigned a therapist role' do
-      user = FactoryBot.create(:user, role: :therapist)
+      user = FactoryBot.create(:user, role: :therapist, specialization: 'Cognitive Behavioral Therapy')
       expect(user.role).to eq('therapist')
     end
 
@@ -81,6 +88,24 @@ RSpec.describe User, type: :model do
       user = FactoryBot.build(:user, password: 'short', password_confirmation: 'short')
       user.valid?
       expect(user.errors[:password]).to include('is too short (minimum is 6 characters)')
+    end
+
+    it 'is not valid without a specialization for admin' do
+      user = FactoryBot.build(:user, :admin, specialization: nil)
+      user.valid?
+      expect(user.errors[:specialization]).to include("can't be blank")
+    end
+
+    it 'is not valid without a specialization for therapist' do
+      user = FactoryBot.build(:user, :therapist, specialization: nil)
+      user.valid?
+      expect(user.errors[:specialization]).to include("can't be blank")
+    end
+
+    it 'is valid without a specialization for client' do
+      user = FactoryBot.build(:user, :client)
+      user.valid?
+      expect(user.errors[:specialization]).to be_empty
     end
   end
 

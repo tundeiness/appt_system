@@ -14,6 +14,7 @@ class User < ApplicationRecord
   validates :phone_number, presence: true
   validates :first_name, presence: true
   validates :last_name, presence: true
+  validates :specialization, presence: true, if: -> { therapist? || admin? }
 
   after_initialize :set_default_role, if: :new_record?
 

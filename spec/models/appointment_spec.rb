@@ -48,5 +48,27 @@ RSpec.describe Appointment, type: :model do
       appointment.valid?
       expect(appointment.errors[:end_time]).to include('must be after start time')
     end
+
+    it 'is not valid if therapist is not a therapist or admin' do
+      non_therapist = FactoryBot.create(:user, :client)
+      appointment = Appointment.new(
+        therapist: non_therapist,
+        client:,
+        start_time: DateTime.now,
+        end_time: DateTime.now + 1.hour
+      )
+      appointment.valid?
+      expect(appointment.errors[:therapist]).to include('must have therapist or admin role')
+    end
+
+    it 'is valid if therapist is an admin' do
+      appointment = Appointment.new(
+        therapist: admin,
+        client:,
+        start_time: DateTime.now,
+        end_time: DateTime.now + 1.hour
+      )
+      expect(appointment).to be_valid
+    end
   end
 end

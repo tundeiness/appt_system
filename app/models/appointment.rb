@@ -5,6 +5,7 @@ class Appointment < ApplicationRecord
   validates :start_time, presence: true
   validates :end_time, presence: true
   validate :end_time_after_start_time
+  validate :therapist_must_be_therapist_or_admin
 
   private
 
@@ -12,5 +13,15 @@ class Appointment < ApplicationRecord
     return if end_time.blank? || start_time.blank?
 
     errors.add(:end_time, 'must be after start time') if end_time <= start_time
+  end
+
+  def therapist_must_be_therapist_or_admin
+    unless therapist&.therapist? || therapist&.admin?
+      errors.add(:therapist, "must have therapist or admin role")
+    end
+  end
+
+  def client_must_be_client
+    errors.add(:client, 'must have client role') if client.present? && !client.client?
   end
 end

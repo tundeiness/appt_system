@@ -1,8 +1,16 @@
 FactoryBot.define do
   factory :appointment do
-    therapist { nil }
-    client { nil }
-    start_time { "2024-08-06 17:09:08" }
-    end_time { "2024-08-06 17:09:08" }
+    association :therapist, factory: :user, role: :therapist
+    association :client, factory: :user, role: :client, optional: true
+    start_time { Faker::Time.forward(days: 5, period: :morning) }
+    end_time { start_time + 1.hour }
+
+    trait :booked do
+      association :client, factory: :user, role: :client
+    end
+
+    trait :available do
+      client { nil }
+    end
   end
 end

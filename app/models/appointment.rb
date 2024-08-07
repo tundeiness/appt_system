@@ -8,6 +8,9 @@ class Appointment < ApplicationRecord
   validate :therapist_must_be_therapist_or_admin
   validate :check_client
 
+  scope :available, -> { where(client_id: nil) }
+  scope :booked, -> { where.not(client_id: nil) }
+
   private
 
   def end_time_after_start_time

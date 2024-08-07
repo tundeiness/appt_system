@@ -7,7 +7,7 @@ FactoryBot.define do
     password { 'password123' }
     password_confirmation { 'password123' }
     role { :client }
-    specialization { nil }
+    # specialization { nil }
 
     trait :client do
       role { :client }

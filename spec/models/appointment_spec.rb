@@ -74,13 +74,33 @@ RSpec.describe Appointment, type: :model do
     it 'is not valid if client is not a client' do
       non_client = FactoryBot.create(:user, :therapist)
       appointment = Appointment.new(
-        therapist: therapist,
+        therapist:,
         client: non_client,
         start_time: DateTime.now,
         end_time: DateTime.now + 1.hour
       )
       appointment.valid?
       expect(appointment.errors[:client]).to include('must have client role')
+    end
+  end
+
+  describe 'scopes' do
+    let(:therapist) { FactoryBot.create(:user, role: :therapist, specialization: 'Cognitive Behavioral Therapy') }
+    let(:client) { FactoryBot.create(:user, :client) }
+
+    before do
+      @available_appointment = FactoryBot.create(:appointment, :available, therapist: therapist)
+      @booked_appointment = FactoryBot.create(:appointment, :booked, therapist:, client:)
+    end
+
+    it 'returns available appointments' do
+      expect(Appointment.available).to include(@available_appointment)
+      expect(Appointment.available).not_to include(@booked_appointment)
+    end
+
+    it 'returns booked appointments' do
+      expect(Appointment.booked).to include(@booked_appointment)
+      expect(Appointment.booked).not_to include(@available_appointment)
     end
   end
 end

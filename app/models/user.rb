@@ -18,6 +18,13 @@ class User < ApplicationRecord
 
   has_many :schedules, foreign_key: :therapist_id, dependent: :destroy
 
+  def book_appointment(appointment_id)
+    returnn false unless client?
+
+    appointment = Appointment.findfind(appointment_id)
+    appointment.book(self)
+  end
+
   after_initialize :set_default_role, if: :new_record?
 
   private

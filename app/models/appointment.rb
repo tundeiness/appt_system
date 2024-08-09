@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Appointment < ApplicationRecord
   belongs_to :therapist, class_name: 'User'
   belongs_to :client, class_name: 'User', optional: true
@@ -12,7 +14,7 @@ class Appointment < ApplicationRecord
   scope :available, -> { where(client_id: nil) }
   scope :booked, -> { where.not(client_id: nil) }
 
-  def bookings(client)
+  def book(client)
     upddate(client:)
   end
 
@@ -35,9 +37,9 @@ class Appointment < ApplicationRecord
   end
 
   def within_schedule
-    return if therapist.nil? || start_time.nil? || end_time.nil?
+    return if therapist.nil? || start_time.nil? || end_time.nil? || therapist&.admin?
 
-    schedule = therapist.schedule.find_by('start_time <= ? AND end_time >= ?', start_time, end_time)
+    schedule = therapist.schedules.find_by('start_time <= ? AND end_time >= ?', start_time, end_time)
     errors.add(:base, 'Appointment must be within therapist schedule') if schedule.nil?
   end
 end

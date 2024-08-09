@@ -4,8 +4,8 @@ FactoryBot.define do
     start_time { DateTime.now }
     end_time { DateTime.now + 1.hour }
 
-    trait :with_invalid_end_time do
-      end_time { start_time - 1.hour }
-    end
+    # trait :with_invalid_end_time do
+    #   end_time { start_time - 1.hour }
+    # end
   end
 end

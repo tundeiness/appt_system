@@ -1,7 +1,11 @@
 FactoryBot.define do
   factory :schedule do
-    therapist { nil }
-    start_time { "2024-08-08 22:58:23" }
-    end_time { "2024-08-08 22:58:23" }
+    association :therapist, factory: :user, role: :therapist
+    start_time { DateTime.now }
+    end_time { DateTime.now + 1.hour }
+
+    trait :with_invalid_end_time do
+      end_time { start_time - 1.hour }
+    end
   end
 end

@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Schedule, type: :model do
   let(:therapist) { FactoryBot.create(:user, :therapist, specialization: 'Cognitive Behavioral Therapy') }
+  let(:schedule) { FactoryBot.create(:schedule) }
 
   subject do
     described_class.new(
@@ -38,6 +39,14 @@ RSpec.describe Schedule, type: :model do
       subject.therapist = nil
       expect(subject).to_not be_valid
       expect(subject.errors[:therapist]).to include('must exist')
+    end
+  end
+
+  describe 'custom validations' do
+    it 'is not valid if therapist is not a therapist' do
+      subject.therapist = FactoryBot.create(:user, :client)
+      expect(subject).to_not be_valid
+      expect(subject.errors[:therapist]).to include('must have therapist or admin role')
     end
   end
 end

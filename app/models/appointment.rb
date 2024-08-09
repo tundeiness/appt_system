@@ -5,11 +5,16 @@ class Appointment < ApplicationRecord
   validates :start_time, presence: true
   validates :end_time, presence: true
   validate :end_time_after_start_time
-  validate :therapist_must_be_therapist_or_admin
+  validate :must_be_therapist_or_admin
   validate :check_client
+  validate :within_schedule
 
   scope :available, -> { where(client_id: nil) }
   scope :booked, -> { where.not(client_id: nil) }
+
+  def bookings(client)
+    upddate(client:)
+  end
 
   private
 
@@ -19,7 +24,7 @@ class Appointment < ApplicationRecord
     errors.add(:end_time, 'must be after start time') if end_time <= start_time
   end
 
-  def therapist_must_be_therapist_or_admin
+  def must_be_therapist_or_admin
     return if therapist&.therapist? || therapist&.admin?
 
     errors.add(:therapist, 'must have therapist or admin role')
@@ -27,5 +32,12 @@ class Appointment < ApplicationRecord
 
   def check_client
     errors.add(:client, 'must have client role') if client.present? && !client.client?
+  end
+
+  def within_schedule
+    return if therapist.nil? || start_time.nil? || end_time.nil?
+
+    schedule = therapist.schedule.find_by('start_time <= ? AND end_time >= ?', start_time, end_time)
+    errors.add(:base, 'Appointment must be within therapist schedule') if schedule.nil?
   end
 end

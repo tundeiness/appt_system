@@ -16,6 +16,8 @@ class User < ApplicationRecord
   validates :last_name, presence: true
   validates :specialization, presence: true, if: -> { therapist? || admin? }
 
+  has_many :schedules, foreign_key: :therapist_id, dependent: :destroy
+
   after_initialize :set_default_role, if: :new_record?
 
   private

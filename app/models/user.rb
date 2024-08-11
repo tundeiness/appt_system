@@ -17,6 +17,8 @@ class User < ApplicationRecord
   validates :specialization, presence: true, if: -> { therapist? || admin? }
 
   has_many :schedules, foreign_key: :therapist_id, dependent: :destroy
+  has_many :appointments_as_therapist, class_name: 'Appointment', foreign_key: :therapist_id
+  has_many :appointments_as_client, class_name: 'Appointment', foreign_key: :client_id
 
   def book_appointment(appointment_id)
     returnn false unless client?

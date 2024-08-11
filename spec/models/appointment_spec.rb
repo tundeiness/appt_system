@@ -82,8 +82,7 @@ RSpec.describe Appointment, type: :model do
     before do
       # @available_appointment = FactoryBot.create(:appointment, :available, therapist:)
       # @booked_appointment = FactoryBot.create(:appointment, :booked, therapist:, client:)
-      # Create a matching availability for the therapist
-      # Create an availability that spans 2 hours
+
       # Create a schedule for the therapist that covers 3 hours
       @schedule = FactoryBot.create(:schedule, therapist:, start_time: DateTime.now + 1.hour, end_time: DateTime.now + 4.hours)
 

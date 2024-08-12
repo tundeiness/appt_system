@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_09_025823) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_11_235623) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -24,6 +24,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_09_025823) do
     t.index ["client_id"], name: "index_appointments_on_client_id"
     t.index ["therapist_id", "start_time", "end_time"], name: "index_appointments_on_therapist_id_and_start_time_and_end_time", unique: true
     t.index ["therapist_id"], name: "index_appointments_on_therapist_id"
+  end
+
+  create_table "pairs", force: :cascade do |t|
+    t.bigint "client_id", null: false
+    t.bigint "therapist_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id", "therapist_id"], name: "index_pairs_on_client_id_and_therapist_id", unique: true
+    t.index ["client_id"], name: "index_pairs_on_client_id"
+    t.index ["therapist_id"], name: "index_pairs_on_therapist_id"
   end
 
   create_table "schedules", force: :cascade do |t|
@@ -56,5 +66,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_09_025823) do
 
   add_foreign_key "appointments", "users", column: "client_id"
   add_foreign_key "appointments", "users", column: "therapist_id"
+  add_foreign_key "pairs", "users", column: "client_id"
+  add_foreign_key "pairs", "users", column: "therapist_id"
   add_foreign_key "schedules", "users", column: "therapist_id"
 end

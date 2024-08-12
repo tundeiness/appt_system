@@ -16,8 +16,14 @@ RSpec.describe Pair, type: :model do
     end
 
     it 'is invalid without a therapist' do
-      pair = FactoryBot.build(:pair, client: client, therapist: nil)
+      pair = FactoryBot.build(:pair, client:, therapist: nil)
       expect(pair).to_not be_valid
+    end
+
+    it 'is invalid if the pair already exists' do
+      FactoryBot.create(:pair, client:, therapist:)
+      duplicate_pair = FactoryBot.build(:pair, client:, therapist:)
+      expect(duplicate_pair).to_not be_valid
     end
   end
 end

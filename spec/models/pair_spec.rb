@@ -9,5 +9,15 @@ RSpec.describe Pair, type: :model do
       pair = FactoryBot.build(:pair, client:, therapist:)
       expect(pair).to be_valid
     end
+
+    it 'is invalid without a client' do
+      pair = FactoryBot.build(:pair, client: nil, therapist:)
+      expect(pair).to_not be_valid
+    end
+
+    it 'is invalid without a therapist' do
+      pair = FactoryBot.build(:pair, client: client, therapist: nil)
+      expect(pair).to_not be_valid
+    end
   end
 end
